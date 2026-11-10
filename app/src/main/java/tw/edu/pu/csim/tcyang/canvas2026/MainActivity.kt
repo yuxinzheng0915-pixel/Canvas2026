@@ -20,7 +20,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import tw.edu.pu.csim.tcyang.canvas2026.ui.theme.Canvas2026Theme
 
@@ -41,10 +44,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CanvasScreen(modifier: Modifier = Modifier) {
+fun  CanvasScreen (modifier: Modifier = Modifier) {
 
     var CanvasWidth  by remember { mutableStateOf(0f) }
     var CanvasHeigth by remember {mutableStateOf(0f) }
+
+    // 載入圖片資源 (小小兵)
+    val minionsImage: ImageBitmap =
+        ImageBitmap.imageResource(id = R.drawable.minions)
+
+
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -76,6 +85,11 @@ fun CanvasScreen(modifier: Modifier = Modifier) {
                 Offset(size.width, size.height),
                 strokeWidth = 10f
             )
+            translate(0f, 0f) {
+                drawImage(minionsImage)
+            }
+
+
         }
 
         Text("畫布寬度 $CanvasWidth, 長度$CanvasHeigth")
