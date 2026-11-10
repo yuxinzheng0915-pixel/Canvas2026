@@ -6,11 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +28,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.delay
 import tw.edu.pu.csim.tcyang.canvas2026.ui.theme.Canvas2026Theme
 
 class MainActivity : ComponentActivity() {
@@ -48,10 +52,21 @@ fun  CanvasScreen (modifier: Modifier = Modifier) {
 
     var CanvasWidth  by remember { mutableStateOf(0f) }
     var CanvasHeigth by remember {mutableStateOf(0f) }
+    var minionsX by remember { mutableStateOf(0f) }
+    var minionsY by remember { mutableStateOf(0f) }
+    var gameOver by remember { mutableStateOf(false) }
 
     // 載入圖片資源 (小小兵)
     val minionsImage: ImageBitmap =
         ImageBitmap.imageResource(id = R.drawable.minions)
+
+    LaunchedEffect (Unit) {
+        while (!gameOver) {
+            delay(1000L)
+            minionsX += 5
+            minionsY += 10
+        }
+    }
 
 
 
@@ -85,14 +100,22 @@ fun  CanvasScreen (modifier: Modifier = Modifier) {
                 Offset(size.width, size.height),
                 strokeWidth = 10f
             )
-            translate(0f, 0f) {
+            translate(minionsX, minionsY) {
                 drawImage(minionsImage)
             }
-
-
+        }
+        Column {
+            Text("畫布寬度 $CanvasWidth, 長度$CanvasHeigth")
+            Button(
+                onClick = { }
+            )
+            {
+                if(gameOver){Text("繼續遊戲")}
+                else{Text("停止遊戲")}
+            }
         }
 
-        Text("畫布寬度 $CanvasWidth, 長度$CanvasHeigth")
+
     }
 
 }
