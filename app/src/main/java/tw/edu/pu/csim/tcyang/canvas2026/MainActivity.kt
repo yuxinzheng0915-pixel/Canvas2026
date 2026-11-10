@@ -45,7 +45,7 @@ fun CanvasScreen(modifier: Modifier = Modifier) {
         drawCircle(
             Color.Magenta,
             100f,
-            Offset(300f, 100f)
+            Offset(300f, 100f),
 
         )
 
