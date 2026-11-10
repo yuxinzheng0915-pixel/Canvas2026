@@ -26,8 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.delay
 import tw.edu.pu.csim.tcyang.canvas2026.ui.theme.Canvas2026Theme
 
@@ -49,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun  CanvasScreen (modifier: Modifier = Modifier) {
-
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
     var CanvasWidth  by remember { mutableStateOf(0f) }
     var CanvasHeigth by remember {mutableStateOf(0f) }
     var minionsX by remember { mutableStateOf(0f) }
@@ -63,15 +65,27 @@ fun  CanvasScreen (modifier: Modifier = Modifier) {
     LaunchedEffect (Unit) {
         while (!gameOver) {
             delay(1000L)
-            minionsX += 5
-            minionsY += 10
+            minionsX += 50f
+            minionsY += 100f
+
+            if (canvasSize.width > 0 && canvasSize.height > 0) {
+                if (minionsX > canvasSize.width || minionsY > canvasSize.height) {
+                    // 超出邊界，重設回原點 (0, 0)
+                    minionsX = 0f
+                    minionsY = 0f
+                }
+            }
         }
     }
 
 
-
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .onSizeChanged{ size ->
+                canvasSize = size
+
+            }
     ){
         Canvas(
             modifier = modifier.fillMaxSize()
@@ -107,9 +121,10 @@ fun  CanvasScreen (modifier: Modifier = Modifier) {
         Column {
             Text("畫布寬度 $CanvasWidth, 長度$CanvasHeigth")
             Button(
-                onClick = { }
-            )
-            {
+                onClick = {
+                    gameOver = !gameOver
+                }
+            ) {
                 if(gameOver){Text("繼續遊戲")}
                 else{Text("停止遊戲")}
             }
